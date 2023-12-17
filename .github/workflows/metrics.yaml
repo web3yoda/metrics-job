@@ -1,0 +1,32 @@
+name: Push Metrics to Grafana Cloud
+
+on:
+  schedule:
+    - cron: '0 0 * * *' 
+
+jobs:
+  push-metrics:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Push Metrics
+        run: |
+          set -x
+          L1RPC_BASE=https://rpc.ankr.com
+          L1NETWORKS="eth eth_goerli eth_sepolia eth_holesky"
+          CURL_OPTS="-i -s -H 'Content-Type: application/json'"
+
+          metrics=""
+          for net in $L1NETWORKS; do
+            rpcUrl=${L1RPC_BASE}/${net}
+            gasPrice=$(curl ${CURL_OPTS} $rpcUrl -d '{"jsonrpc":"2.0","method":"eth_gasPrice","params":[],"id":1}' | grep -Eo '0x[a-f0-9]+' | xargs printf %d)
+            metrics="
+            ${metrics}
+            w3y_gas_price,network=${net},rpc=${rpcUrl} metric=${gasPrice}
+            "
+          done
+
+          curl ${CURL_OPTS} -H  "Authorization: Bearer $GF_CLOUD_TOKEN" $GF_CLOUD_METRICS_URL -d "${metrics}"
+
+          which jq
+          which yq
