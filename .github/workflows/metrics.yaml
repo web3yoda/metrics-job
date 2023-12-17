@@ -3,6 +3,7 @@ name: Push Metrics to Grafana Cloud
 on:
   schedule:
     - cron: '* * * * *' 
+  workflow_dispatch:
 
 jobs:
   push-metrics:
