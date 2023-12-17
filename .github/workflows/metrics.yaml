@@ -2,7 +2,7 @@ name: Push Metrics to Grafana Cloud
 
 on:
   schedule:
-    - cron: '0 0 * * *' 
+    - cron: '* * * * *' 
 
 jobs:
   push-metrics:
