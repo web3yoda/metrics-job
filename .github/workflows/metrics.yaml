@@ -27,7 +27,7 @@ jobs:
             "
           done
 
-          curl ${CURL_OPTS} -H  "Authorization: Bearer ${{ secrets.GF_CLOUD_TOKEN }}" $GF_CLOUD_METRICS_URL -d "${metrics}"
+          curl ${CURL_OPTS} -H  "Authorization: Bearer ${{ secrets.GF_CLOUD_TOKEN }}" ${{ secrets.GF_CLOUD_METRICS_URL }} -d "${metrics}"
 
           which jq
           which yq
